@@ -30,10 +30,10 @@ async function buildHTML() {
     const components = await fsPromises.readdir(componentsFolderPath, { withFileTypes: true });
     //для каждого компонента берём имя и по имени заменяем и записываем в выходной файл
     for (const component of components) {
-      const componentNameFile = component.name.split('.')[0];
-      const componentExtNameFile = component.name.split('.')[1];
+      const componentFilePath = path.join(componentsFolderPath, component.name);
+      const componentNameFile = path.parse(componentFilePath).name;
+      const componentExtNameFile = path.extname(componentFilePath).slice(1);
       if (component.isFile() && componentExtNameFile === 'html') {
-        const componentFilePath = path.join(componentsFolderPath, component.name);
         const componentFileData = await fsPromises.readFile(componentFilePath, 'utf-8');
         const templateTag = `{{${componentNameFile}}}`;
         const dataNewFile = await fsPromises.readFile(htmlFilePath, 'utf-8');
